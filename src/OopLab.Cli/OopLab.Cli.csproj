@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
+    <AssemblyTitle>OopLab.Cli - Console Interface</AssemblyTitle>
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OopLab.Core\OopLab.Core.csproj" />
+    <ProjectReference Include="..\OopLab.Data\OopLab.Data.csproj" />
+  </ItemGroup>
+</Project>

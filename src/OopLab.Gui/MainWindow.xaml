@@ -1,0 +1,151 @@
+﻿<Window x:Class="OopLab.Gui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:OopLab.Gui.Converters"
+        Title="Каталог персонажів — Rick &amp; Morty API (v1.0.0 Final Release)"
+        Height="760" Width="1180"
+        MinHeight="600" MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        Background="#14181E" Foreground="#F3F4F6">
+    <Window.Resources>
+        <conv:HexColorToBrushConverter x:Key="HexBrush"/>
+        <conv:LocalImageSourceConverter x:Key="ImgConverter"/>
+    </Window.Resources>
+
+    <DockPanel LastChildFill="True">
+        <Border DockPanel.Dock="Top" Background="#1C222B" BorderBrush="#2E3744" BorderThickness="0,0,0,1" Padding="20,14">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="12"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0">
+                    <StackPanel DockPanel.Dock="Left">
+                        <TextBlock Text="КАТАЛОГ ПЕРСОНАЖІВ — RICK &amp; MORTY API"
+                                   FontSize="20" FontWeight="Bold" Foreground="#F3F4F6"/>
+                        <TextBlock Text="Нативний графічний інтерфейс (WPF) • Спільні бібліотеки OopLab.Core.dll та OopLab.Data.dll"
+                                   FontSize="12" Foreground="#9CA3AF" Margin="0,2,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="SyncButton" Content="⟳ Завантажити з API та закешувати (20)"
+                                Padding="14,8" Background="#55CC44" Foreground="#0F172A"
+                                FontWeight="Bold" BorderThickness="0" Cursor="Hand"
+                                Click="SyncButton_Click"/>
+                    </StackPanel>
+                </DockPanel>
+
+                <WrapPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Пошук:" VerticalAlignment="Center" Foreground="#9CA3AF" Margin="0,0,8,0"/>
+                    <TextBox x:Name="SearchTextBox" Width="230" Height="32" Padding="8,5"
+                             Background="#14181E" Foreground="#F3F4F6" BorderBrush="#343F4E"
+                             VerticalContentAlignment="Center"
+                             TextChanged="FilterControls_Changed"/>
+
+                    <TextBlock Text="Статус:" VerticalAlignment="Center" Foreground="#9CA3AF" Margin="16,0,8,0"/>
+                    <ComboBox x:Name="StatusComboBox" Width="130" Height="32" SelectedIndex="0"
+                              SelectionChanged="FilterControls_Changed">
+                        <ComboBoxItem Content="Усі статуси" Tag=""/>
+                        <ComboBoxItem Content="Alive" Tag="Alive"/>
+                        <ComboBoxItem Content="Dead" Tag="Dead"/>
+                        <ComboBoxItem Content="unknown" Tag="unknown"/>
+                    </ComboBox>
+
+                    <TextBlock Text="Сортування:" VerticalAlignment="Center" Foreground="#9CA3AF" Margin="16,0,8,0"/>
+                    <ComboBox x:Name="SortComboBox" Width="170" Height="32" SelectedIndex="0"
+                              SelectionChanged="FilterControls_Changed">
+                        <ComboBoxItem Content="За ID (стандартно)" Tag="id"/>
+                        <ComboBoxItem Content="За рейтингом (Power)" Tag="power"/>
+                        <ComboBoxItem Content="За епізодами" Tag="episodes"/>
+                        <ComboBoxItem Content="За іменем (А-Я)" Tag="name"/>
+                    </ComboBox>
+
+                    <CheckBox x:Name="OnlyCachedCheckBox" Content="Тільки з локальним фото в кеші"
+                              Foreground="#F3F4F6" VerticalAlignment="Center" Margin="18,0,0,0"
+                              Checked="FilterControls_Changed" Unchecked="FilterControls_Changed"/>
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <Border DockPanel.Dock="Bottom" Background="#1C222B" BorderBrush="#2E3744" BorderThickness="0,1,0,0" Padding="20,8">
+            <DockPanel>
+                <TextBlock x:Name="StatusTextBlock" DockPanel.Dock="Left"
+                           Text="Готово до роботи." Foreground="#9CA3AF" FontSize="12"/>
+                <TextBlock x:Name="CachePathTextBlock" DockPanel.Dock="Right"
+                           Foreground="#38BDF8" FontSize="11"/>
+            </DockPanel>
+        </Border>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="18">
+            <ItemsControl x:Name="CharactersItemsControl">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="260" Margin="10" Background="#222933"
+                                BorderBrush="#343F4E" BorderThickness="1" CornerRadius="12">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.35" Color="#000000"/>
+                            </Border.Effect>
+
+                            <StackPanel>
+                                <Grid Height="215">
+                                    <Border CornerRadius="11,11,0,0" ClipToBounds="True" Background="#14181E">
+                                        <Image Source="{Binding EffectiveImageSource, Converter={StaticResource ImgConverter}}"
+                                               Stretch="UniformToFill"/>
+                                    </Border>
+
+                                    <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
+                                            Padding="8,3" CornerRadius="6" Background="#E6111827">
+                                        <TextBlock Text="{Binding TierRank}" Foreground="#FBBF24"
+                                                   FontWeight="Bold" FontSize="13"/>
+                                    </Border>
+
+                                    <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10"
+                                            Padding="7,2" CornerRadius="5" Background="#D9111827">
+                                        <TextBlock Text="{Binding CacheStatusLabel}" Foreground="#38BDF8"
+                                                   FontSize="10" FontWeight="SemiBold"/>
+                                    </Border>
+                                </Grid>
+
+                                <StackPanel Margin="14,12,14,14">
+                                    <TextBlock Text="{Binding DisplayName}" FontSize="17" FontWeight="Bold"
+                                               Foreground="#F3F4F6" TextTrimming="CharacterEllipsis"
+                                               ToolTip="{Binding DisplayName}"/>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,8" VerticalAlignment="Center">
+                                        <Ellipse Width="9" Height="9" Margin="0,0,6,0"
+                                                 Fill="{Binding StatusColorHex, Converter={StaticResource HexBrush}}"/>
+                                        <TextBlock Text="{Binding StatusBadge}" FontSize="11" FontWeight="Bold"
+                                                   Foreground="#D1D5DB"/>
+                                        <TextBlock Text=" • " Foreground="#6B7280" FontSize="11"/>
+                                        <TextBlock Text="{Binding SpeciesLabel}" FontSize="12" Foreground="#9CA3AF"
+                                                   TextTrimming="CharacterEllipsis" MaxWidth="135"/>
+                                    </StackPanel>
+
+                                    <TextBlock Text="{Binding OriginWorldLabel, StringFormat='Світ: {0}'}"
+                                               FontSize="12" Foreground="#9CA3AF" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="{Binding EpisodeAppearances, StringFormat='Епізодів: {0}'}"
+                                               FontSize="12" Foreground="#9CA3AF" Margin="0,2,0,10"/>
+
+                                    <Button Content="Детальніше" Height="32"
+                                            Background="#2D3748" Foreground="#F3F4F6"
+                                            BorderBrush="#4A5568" BorderThickness="1"
+                                            FontWeight="SemiBold" Cursor="Hand"
+                                            Tag="{Binding}"
+                                            Click="DetailsButton_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

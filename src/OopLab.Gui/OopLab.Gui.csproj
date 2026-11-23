@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
+    <AssemblyTitle>OopLab.Gui - Character Catalog Desktop App</AssemblyTitle>
+    <Product>Character Catalog (Rick and Morty API)</Product>
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OopLab.Core\OopLab.Core.csproj" />
+    <ProjectReference Include="..\OopLab.Data\OopLab.Data.csproj" />
+  </ItemGroup>
+</Project>
